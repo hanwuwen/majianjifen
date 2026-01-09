@@ -1,10 +1,19 @@
 //create-room.js
 Page({
   data: {
-    roomName: '麻将局',
+    roomName: '',
     playerCountOptions: ['2人', '3人', '4人'],
     playerCountIndex: 2, // 默认4人
     initialScore: 1000
+  },
+  onLoad() {
+    // 生成默认房间名称：房间号+记分局
+    const timestamp = Date.now().toString().slice(-6);
+    const randomPart = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const roomId = `${timestamp}${randomPart}`;
+    this.setData({
+      roomName: `${roomId}记分局`
+    });
   },
   bindRoomNameInput(e) {
     this.setData({
