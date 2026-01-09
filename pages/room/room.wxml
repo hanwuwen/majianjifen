@@ -5,6 +5,12 @@
     <view class="header-content">
       <text class="room-name">{{room.name}}</text>
       <text class="room-id">{{room.id}}</text>
+      <view class="sync-status">
+        <text wx:if="{{syncStatus === 'loading'}}" class="status-text loading">加载中...</text>
+        <text wx:elif="{{syncStatus === 'syncing'}}" class="status-text syncing">同步中...</text>
+        <text wx:elif="{{syncStatus === 'synced'}}" class="status-text synced">已同步</text>
+        <text wx:else class="status-text idle">就绪</text>
+      </view>
     </view>
     <button class="btn-invite" bindtap="inviteFriends">邀请</button>
   </view>
@@ -12,6 +18,10 @@
   <!-- 玩家列表 -->
   <view class="player-section">
     <view class="player-item" wx:for="{{players}}" wx:key="{{item.id}}" bindtap="selectPlayer" data-id="{{item.id}}" class="{{selectedPlayer && selectedPlayer.id === item.id ? 'selected' : ''}}">
+      <view class="player-avatar-container">
+        <image wx:if="{{item.avatar}}" class="player-avatar" src="{{item.avatar}}" mode="aspectFill" />
+        <view wx:else class="player-avatar-placeholder">{{item.name.charAt(0)}}</view>
+      </view>
       <text class="player-name">{{item.name}}</text>
       <text class="player-score">{{item.score}}</text>
     </view>
@@ -22,7 +32,7 @@
     <view class="score-input">
       <input class="input" type="number" placeholder="输入分数" bindinput="bindScoreInput" value="{{score}}" focus="{{autoFocus}}" />
     </view>
-    <view class="quick-scores" wx:if="{{false}}">
+    <view class="quick-scores" wx:if="{{true}}">
       <button class="quick-score-btn" bindtap="setQuickScore" data-score="10">10</button>
       <button class="quick-score-btn" bindtap="setQuickScore" data-score="20">20</button>
       <button class="quick-score-btn" bindtap="setQuickScore" data-score="50">50</button>

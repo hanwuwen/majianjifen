@@ -9,6 +9,10 @@
       </view>
       <view class="history-players">
         <view class="history-player" wx:for="{{item.players}}" wx:key="{{subItem.id}}">
+          <view class="player-avatar-container">
+            <image wx:if="{{subItem.avatar}}" class="player-avatar" src="{{subItem.avatar}}" mode="aspectFill" />
+            <view wx:else class="player-avatar-placeholder">{{subItem.name.charAt(0)}}</view>
+          </view>
           <text class="player-name">{{subItem.name}}</text>
           <text class="player-score">{{subItem.score}}</text>
         </view>

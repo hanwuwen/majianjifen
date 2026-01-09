@@ -1,6 +1,8 @@
 /* create-room.wxss */
 .container {
   padding: 40rpx 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
 }
 
 .title {
@@ -24,20 +26,31 @@
 
 .input {
   width: 100%;
-  padding: 20rpx;
-  border: 2rpx solid #ddd;
-  border-radius: 10rpx;
+  padding: 24rpx;
+  border: 1rpx solid #e8e8e8;
+  border-radius: 16rpx;
   font-size: 32rpx;
   box-sizing: border-box;
+  background-color: #fff;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  border-color: #1AAD19;
+  box-shadow: 0 0 0 2rpx rgba(26, 173, 25, 0.1);
 }
 
 .picker {
   width: 100%;
-  padding: 20rpx;
-  border: 2rpx solid #ddd;
-  border-radius: 10rpx;
+  padding: 24rpx;
+  border: 1rpx solid #e8e8e8;
+  border-radius: 16rpx;
   font-size: 32rpx;
   box-sizing: border-box;
+  background-color: #fff;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
 }
 
 .picker-text {
@@ -49,13 +62,22 @@
   width: 100%;
   padding: 30rpx;
   text-align: center;
-  border-radius: 10rpx;
+  border-radius: 16rpx;
   font-size: 32rpx;
   margin: 40rpx 0;
   box-sizing: border-box;
+  transition: all 0.3s ease;
+  font-weight: 600;
 }
 
 .btn-primary {
-  background-color: #07c160;
+  background-color: #1AAD19;
   color: white;
+  box-shadow: 0 2rpx 12rpx rgba(26, 173, 25, 0.1);
+}
+
+.btn-primary:hover {
+  background-color: #179b16;
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 16rpx rgba(26, 173, 25, 0.3);
 }

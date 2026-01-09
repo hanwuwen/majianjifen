@@ -10,22 +10,27 @@ Page({
     roomId: '',
     watcher: null,
     autoFocus: false,
-    syncStatus: 'idle' // idle, loading, syncing, synced
+    syncStatus: 'idle', // idle, loading, syncing, synced
+    userInfo: null
   },
   onLoad(options) {
     const { roomId, type } = options;
     this.setData({ roomId });
     
+    // 获取app实例和用户信息
+    const app = getApp();
+    this.setData({ userInfo: app.globalData.userInfo });
+    
     if (type === 'single') {
       // 单人模式
       const player = {
         id: 1,
-        name: '玩家1',
+        name: app.globalData.userInfo ? app.globalData.userInfo.nickName : '玩家1',
         score: 1000
       };
       this.setData({
         players: [player],
-        playerNames: ['玩家1'],
+        playerNames: [player.name],
         selectedPlayer: player,
         history: []
       });
@@ -39,34 +44,63 @@ Page({
       });
     }
   },
+  onShow() {
+    // 每次页面显示时更新用户信息
+    const app = getApp();
+    this.setData({ userInfo: app.globalData.userInfo });
+  },
   loadRoomFromCloud(roomId) {
     this.setData({ syncStatus: 'loading' });
     const db = wx.cloud.database();
-    db.collection('rooms').doc(roomId).get({
+    db.collection('majiang_rooms').doc(roomId).get({
       success: (res) => {
         if (res.data) {
           const room = res.data;
+          const userInfo = this.data.userInfo;
+          
+          // 为玩家添加头像信息
+          const playersWithAvatar = room.players.map(player => {
+            // 如果玩家是当前用户，使用当前用户的头像
+            if (player.name === userInfo?.nickName) {
+              return { ...player, avatar: userInfo.avatarUrl };
+            }
+            return player;
+          });
+          
           this.setData({
             room: room,
-            players: room.players,
-            playerNames: room.players.map(p => p.name),
-            selectedPlayer: room.players[0],
+            players: playersWithAvatar,
+            playerNames: playersWithAvatar.map(p => p.name),
+            selectedPlayer: playersWithAvatar[0],
             history: room.history || [],
             syncStatus: 'synced'
           });
           // 保存到本地存储
-          wx.setStorageSync('currentRoom', room);
+          wx.setStorageSync('currentRoom', {
+            ...room,
+            players: playersWithAvatar
+          });
           // 开始监听数据变化
           this.startWatchingRoom(roomId);
         } else {
           // 从本地存储加载
           const room = wx.getStorageSync('currentRoom');
           if (room) {
+            const userInfo = this.data.userInfo;
+            
+            // 为玩家添加头像信息
+            const playersWithAvatar = room.players.map(player => {
+              if (player.name === userInfo?.nickName) {
+                return { ...player, avatar: userInfo.avatarUrl };
+              }
+              return player;
+            });
+            
             this.setData({
               room: room,
-              players: room.players,
-              playerNames: room.players.map(p => p.name),
-              selectedPlayer: room.players[0],
+              players: playersWithAvatar,
+              playerNames: playersWithAvatar.map(p => p.name),
+              selectedPlayer: playersWithAvatar[0],
               history: room.history,
               syncStatus: 'synced'
             });
@@ -98,23 +132,44 @@ Page({
     const db = wx.cloud.database();
     // 监听房间数据变化
     this.setData({
-      watcher: db.collection('rooms').doc(roomId).watch({
+      watcher: db.collection('majiang_rooms').doc(roomId).watch({
         onChange: (snapshot) => {
           if (snapshot.docChanges.length > 0) {
             this.setData({ syncStatus: 'syncing' });
             const room = snapshot.docChanges[0].doc;
+            const userInfo = this.data.userInfo;
+            
+            // 为玩家添加头像信息
+            const playersWithAvatar = room.players.map(player => {
+              if (player.name === userInfo?.nickName) {
+                return { ...player, avatar: userInfo.avatarUrl };
+              }
+              return player;
+            });
+            
             this.setData({
               room: room,
-              players: room.players,
-              playerNames: room.players.map(p => p.name),
+              players: playersWithAvatar,
+              playerNames: playersWithAvatar.map(p => p.name),
               history: room.history || [],
               syncStatus: 'synced'
             });
             // 更新本地存储
-            wx.setStorageSync('currentRoom', room);
+            wx.setStorageSync('currentRoom', {
+              ...room,
+              players: playersWithAvatar
+            });
             
             // 检查房间是否已被结算
             if (room.status === 'settled' && room.settledPlayers) {
+              // 为结算玩家添加头像信息
+              const settledPlayersWithAvatar = room.settledPlayers.map(player => {
+                if (player.name === userInfo?.nickName) {
+                  return { ...player, avatar: userInfo.avatarUrl };
+                }
+                return player;
+              });
+              
               // 显示结算提示
               wx.showModal({
                 title: '本局已结算',
@@ -123,7 +178,7 @@ Page({
                   if (res.confirm) {
                     // 跳转到结算页面
                     wx.navigateTo({
-                      url: `/pages/result/result?result=${JSON.stringify(room.settledPlayers)}`
+                      url: `/pages/result/result?result=${JSON.stringify(settledPlayersWithAvatar)}`
                     });
                   }
                 }
@@ -230,7 +285,7 @@ Page({
             wx.setStorageSync('currentRoom', room);
             // 更新云数据库
             const db = wx.cloud.database();
-            db.collection('rooms').doc(this.data.roomId).update({
+            db.collection('majiang_rooms').doc(this.data.roomId).update({
               data: {
                 players: players
               }
@@ -380,7 +435,7 @@ Page({
       // 更新云数据库
       this.setData({ syncStatus: 'syncing' });
       const db = wx.cloud.database();
-      db.collection('rooms').doc(this.data.roomId).update({
+      db.collection('majiang_rooms').doc(this.data.roomId).update({
         data: {
           players: players,
           history: history
@@ -404,33 +459,21 @@ Page({
   settle() {
     const players = this.data.players;
     const room = this.data.room;
+    const userInfo = this.data.userInfo;
     
     // 多人模式下检查是否为房主
     if (room && room.creator) {
-      // 获取当前用户信息（使用 wx.getUserProfile 替代 wx.getUserInfo）
-      wx.getUserProfile({
-        desc: '用于验证房主身份',
-        success: (res) => {
-          const currentUser = res.userInfo.nickName;
-          // 检查当前用户是否是房主
-          if (currentUser !== room.creator) {
-            wx.showToast({
-              title: '只有房主才能结算对局',
-              icon: 'none'
-            });
-            return;
-          }
-          
-          // 显示结算确认提示
-          this.showSettlementConfirm(players, room);
-        },
-        fail: (err) => {
-          console.error('获取用户信息失败', err);
-          // 如果获取用户信息失败，使用默认逻辑
-          // 这里简化处理，实际应用中应该有更完善的用户认证机制
-          this.showSettlementConfirm(players, room);
-        }
-      });
+      // 检查当前用户是否是房主
+      if (userInfo && userInfo.nickName !== room.creator) {
+        wx.showToast({
+          title: '只有房主才能结算对局',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      // 显示结算确认提示
+      this.showSettlementConfirm(players, room);
     } else {
       // 单人模式或没有房主信息的情况，直接显示确认提示
       this.showSettlementConfirm(players, room);
@@ -461,7 +504,7 @@ Page({
           // 如果是多人模式，更新云数据库中的房间状态为已结算
           if (room && room.id) {
             const db = wx.cloud.database();
-            db.collection('rooms').doc(room.id).update({
+            db.collection('majiang_rooms').doc(room.id).update({
               data: {
                 status: 'settled',
                 settledPlayers: players,

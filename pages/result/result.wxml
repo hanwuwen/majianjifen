@@ -4,6 +4,10 @@
   
   <view class="result-list">
     <view class="result-item" wx:for="{{result}}" wx:key="{{item.id}}">
+      <view class="player-avatar-container">
+        <image wx:if="{{item.avatar}}" class="player-avatar" src="{{item.avatar}}" mode="aspectFill" />
+        <view wx:else class="player-avatar-placeholder">{{item.name.charAt(0)}}</view>
+      </view>
       <text class="player-name">{{item.name}}</text>
       <text class="player-score">{{item.score}}分</text>
     </view>
