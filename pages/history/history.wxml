@@ -1,0 +1,28 @@
+<!--history.wxml-->
+<view class="container">
+  <!-- 历史记录列表 -->
+  <view class="history-list" wx:if="{{gameHistory.length > 0}}">
+    <view class="history-item" wx:for="{{gameHistory}}" wx:key="{{item.id}}" bindtap="viewDetail" data-id="{{item.id}}">
+      <view class="history-header">
+        <text class="history-name">{{item.roomName}}</text>
+        <text class="history-time">{{item.formattedTime}}</text>
+      </view>
+      <view class="history-players">
+        <view class="history-player" wx:for="{{item.players}}" wx:key="{{subItem.id}}">
+          <text class="player-name">{{subItem.name}}</text>
+          <text class="player-score">{{subItem.score}}</text>
+        </view>
+      </view>
+      <view class="history-footer">
+        <text class="footer-text">点击查看详情</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{gameHistory.length === 0}}">
+    <text class="empty-text">暂无历史记录</text>
+    <text class="empty-hint">开始一局游戏，记录将会保存在这里</text>
+    <navigator url="/pages/index/index" class="btn-start">开始游戏</navigator>
+  </view>
+</view>

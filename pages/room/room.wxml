@@ -1,0 +1,47 @@
+<!--room.wxml-->
+<view class="container">
+  <!-- 房间信息 -->
+  <view class="header" wx:if="{{room}}">
+    <view class="header-content">
+      <text class="room-name">{{room.name}}</text>
+      <text class="room-id">{{room.id}}</text>
+    </view>
+    <button class="btn-invite" bindtap="inviteFriends">邀请</button>
+  </view>
+  
+  <!-- 玩家列表 -->
+  <view class="player-section">
+    <view class="player-item" wx:for="{{players}}" wx:key="{{item.id}}" bindtap="selectPlayer" data-id="{{item.id}}" class="{{selectedPlayer && selectedPlayer.id === item.id ? 'selected' : ''}}">
+      <text class="player-name">{{item.name}}</text>
+      <text class="player-score">{{item.score}}</text>
+    </view>
+  </view>
+  
+  <!-- 计分操作 -->
+  <view class="score-section">
+    <view class="score-input">
+      <input class="input" type="number" placeholder="输入分数" bindinput="bindScoreInput" value="{{score}}" focus="{{autoFocus}}" />
+    </view>
+    <view class="quick-scores" wx:if="{{false}}">
+      <button class="quick-score-btn" bindtap="setQuickScore" data-score="10">10</button>
+      <button class="quick-score-btn" bindtap="setQuickScore" data-score="20">20</button>
+      <button class="quick-score-btn" bindtap="setQuickScore" data-score="50">50</button>
+      <button class="quick-score-btn" bindtap="setQuickScore" data-score="100">100</button>
+    </view>
+    <view class="score-buttons">
+      <button class="btn-win" bindtap="addScore">赢</button>
+      <button class="btn-lose" bindtap="subtractScore">输</button>
+    </view>
+  </view>
+  
+  <!-- 历史记录 -->
+  <view class="history-section" wx:if="{{history.length > 0}}">
+    <view class="history-item" wx:for="{{history}}" wx:key="{{item.id}}">
+      <text class="history-player">{{item.playerName}}</text>
+      <text class="history-score {{item.type === 'add' ? 'positive' : 'negative'}}">{{item.type === 'add' ? '+' : '-'}}{{item.score}}</text>
+    </view>
+  </view>
+  
+  <!-- 结算按钮 -->
+  <button class="btn-settle" bindtap="settle">结算</button>
+</view>

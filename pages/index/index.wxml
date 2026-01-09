@@ -1,0 +1,19 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="title">麻将计分</view>
+  
+  <navigator url="/pages/create-room/create-room" class="btn btn-primary">
+    创建房间
+  </navigator>
+  
+  <view class="divider">或</view>
+  
+  <view class="join-section">
+    <input class="input" placeholder="房间号" bindinput="bindRoomIdInput" value="{{roomId}}" />
+    <button class="btn btn-secondary" bindtap="joinRoom">加入</button>
+  </view>
+  
+  <navigator url="/pages/room/room?type=single" class="btn btn-tertiary">
+    单人模式
+  </navigator>
+</view>

@@ -1,0 +1,23 @@
+<!--create-room.wxml-->
+<view class="container">
+  <view class="title">创建记分局</view>
+  
+  <view class="form-group">
+    <text class="label">记分局名称</text>
+    <input class="input" placeholder="请输入记分局名称" bindinput="bindRoomNameInput" value="{{roomName}}" />
+  </view>
+  
+  <view class="form-group">
+    <text class="label">玩家人数</text>
+    <picker class="picker" mode="selector" range="{{playerCountOptions}}" bindchange="bindPlayerCountChange" value="{{playerCountIndex}}">
+      <view class="picker-text">{{playerCountOptions[playerCountIndex]}}</view>
+    </picker>
+  </view>
+  
+  <view class="form-group">
+    <text class="label">初始分数</text>
+    <input class="input" type="number" placeholder="请输入初始分数" bindinput="bindInitialScoreInput" value="{{initialScore}}" />
+  </view>
+  
+  <button class="btn btn-primary" bindtap="createRoom">创建记分局</button>
+</view>

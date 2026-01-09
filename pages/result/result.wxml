@@ -1,0 +1,30 @@
+<!--result.wxml-->
+<view class="container">
+  <view class="title">结算结果</view>
+  
+  <view class="result-list">
+    <view class="result-item" wx:for="{{result}}" wx:key="{{item.id}}">
+      <text class="player-name">{{item.name}}</text>
+      <text class="player-score">{{item.score}}分</text>
+    </view>
+  </view>
+  
+  <view class="summary">
+    <text class="summary-title">汇总</text>
+    <view class="summary-item">
+      <text>最高得分</text>
+      <text>{{maxScore}}分</text>
+    </view>
+    <view class="summary-item">
+      <text>最低得分</text>
+      <text>{{minScore}}分</text>
+    </view>
+    <view class="summary-item">
+      <text>平均得分</text>
+      <text>{{avgScore}}分</text>
+    </view>
+  </view>
+  
+  <button class="btn btn-primary" bindtap="backToHome">返回首页</button>
+  <button class="btn btn-secondary" bindtap="viewHistory">查看历史记录</button>
+</view>

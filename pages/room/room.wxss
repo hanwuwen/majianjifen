@@ -1,0 +1,207 @@
+/* room.wxss */
+.container {
+  padding: 16rpx;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+/* 头部信息 */
+.header {
+  background-color: #fff;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content {
+  flex: 1;
+}
+
+.room-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4rpx;
+  display: block;
+}
+
+.room-id {
+  font-size: 20rpx;
+  color: #999;
+  display: block;
+}
+
+.btn-invite {
+  background-color: #1AAD19;
+  color: #fff;
+  border-radius: 24rpx;
+  padding: 12rpx 24rpx;
+  font-size: 22rpx;
+  min-width: 120rpx;
+  text-align: center;
+}
+
+/* 玩家列表 */
+.player-section {
+  background-color: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.player-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 20rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  transition: all 0.2s ease;
+}
+
+.player-item:last-child {
+  border-bottom: none;
+}
+
+.player-item.selected {
+  background-color: #f0f9ff;
+}
+
+.player-name {
+  font-size: 26rpx;
+  color: #333;
+  flex: 1;
+}
+
+.player-score {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  min-width: 80rpx;
+  text-align: right;
+}
+
+/* 计分操作 */
+.score-section {
+  background-color: #fff;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+}
+
+.score-input {
+  margin-bottom: 16rpx;
+}
+
+.input {
+  border: 1rpx solid #e8e8e8;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  font-size: 24rpx;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fafafa;
+}
+
+.score-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.btn-win, .btn-lose {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-weight: 500;
+}
+
+.btn-win {
+  background-color: #52c41a;
+  color: #fff;
+}
+
+.btn-lose {
+  background-color: #ff4d4f;
+  color: #fff;
+}
+
+/* 历史记录 */
+.history-section {
+  background-color: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-player {
+  font-size: 22rpx;
+  color: #666;
+  flex: 1;
+}
+
+.history-score {
+  font-size: 24rpx;
+  font-weight: 600;
+  min-width: 100rpx;
+  text-align: right;
+}
+
+.positive {
+  color: #52c41a;
+}
+
+.negative {
+  color: #ff4d4f;
+}
+
+/* 结算按钮 */
+.btn-settle {
+  background-color: #1AAD19;
+  color: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 26rpx;
+  margin-top: 16rpx;
+  width: 100%;
+  font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .container {
+    padding: 12rpx;
+  }
+  
+  .player-item {
+    padding: 16rpx;
+  }
+  
+  .btn-add, .btn-subtract {
+    height: 72rpx;
+    font-size: 32rpx;
+  }
+}
