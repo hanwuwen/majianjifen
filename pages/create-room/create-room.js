@@ -2,16 +2,18 @@
 Page({
   data: {
     roomName: '',
+    roomId: '',
     playerCountOptions: ['2人', '3人', '4人'],
     playerCountIndex: 2, // 默认4人
     initialScore: 1000
   },
   onLoad() {
-    // 生成默认房间名称：房间号+记分局
+    // 生成房间ID和默认房间名称：房间号+记分局
     const timestamp = Date.now().toString().slice(-6);
     const randomPart = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     const roomId = `${timestamp}${randomPart}`;
     this.setData({
+      roomId: roomId,
       roomName: `${roomId}记分局`
     });
   },
@@ -31,13 +33,10 @@ Page({
     });
   },
   createRoom() {
-    const { roomName, playerCountIndex, initialScore } = this.data;
+    const { roomName, roomId, playerCountIndex, initialScore } = this.data;
     const playerCount = parseInt(playerCountIndex) + 2;
     
-    // 生成房间ID（时间戳+随机数，确保唯一性）
-    const timestamp = Date.now().toString().slice(-6);
-    const randomPart = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    const roomId = `${timestamp}${randomPart}`;
+    // 使用onLoad中生成的roomId，确保与房间名称一致
     
     // 获取app实例和用户信息
     const app = getApp();
