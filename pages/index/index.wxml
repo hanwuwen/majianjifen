@@ -1,5 +1,13 @@
 <!--index.wxml-->
 <view class="container">
+  <view class="user-info-section">
+    <view wx:if="{{userInfo}}" class="user-info">
+      <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+      <view class="user-name">{{userInfo.nickName}}</view>
+    </view>
+    <button wx:else class="btn btn-info" bindtap="getUserInfo">获取用户信息</button>
+  </view>
+  
   <view class="title">麻将计分</view>
   
   <navigator url="/pages/create-room/create-room" class="btn btn-primary">

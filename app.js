@@ -15,8 +15,7 @@ App({
       wx.setStorageSync('currentRoom', null);
     }
     
-    // 默认获取微信用户信息
-    this.getUserInfo();
+    // 注意：不再自动获取用户信息，需要通过用户点击触发
   },
   getUserInfo() {
     wx.getUserProfile({

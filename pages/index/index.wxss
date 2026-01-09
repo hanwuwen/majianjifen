@@ -8,11 +8,67 @@
   min-height: 100vh;
 }
 
+/* 用户信息区域 */
+.user-info-section {
+  width: 100%;
+  max-width: 500rpx;
+  margin-bottom: 40rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  width: 100%;
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-bottom: 16rpx;
+  object-fit: cover;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.user-name {
+  font-size: 24rpx;
+  color: #333;
+  font-weight: 500;
+  text-align: center;
+}
+
+.btn-info {
+  background-color: #faad14;
+  color: white;
+  width: 100%;
+  max-width: 500rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.btn-info:hover {
+  background-color: #d48e09;
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 16rpx rgba(250, 173, 20, 0.3);
+}
+
 .title {
   font-size: 48rpx;
   font-weight: bold;
   text-align: center;
-  margin: 40rpx 0 60rpx 0;
+  margin: 0 0 60rpx 0;
   color: #333;
 }
 
