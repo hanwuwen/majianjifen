@@ -9,7 +9,8 @@ Page({
     history: [],
     roomId: '',
     watcher: null,
-    autoFocus: false
+    autoFocus: false,
+    syncStatus: 'idle' // idle, loading, syncing, synced
   },
   onLoad(options) {
     const { roomId, type } = options;
@@ -39,6 +40,7 @@ Page({
     }
   },
   loadRoomFromCloud(roomId) {
+    this.setData({ syncStatus: 'loading' });
     const db = wx.cloud.database();
     db.collection('rooms').doc(roomId).get({
       success: (res) => {
@@ -49,7 +51,8 @@ Page({
             players: room.players,
             playerNames: room.players.map(p => p.name),
             selectedPlayer: room.players[0],
-            history: room.history || []
+            history: room.history || [],
+            syncStatus: 'synced'
           });
           // 保存到本地存储
           wx.setStorageSync('currentRoom', room);
@@ -64,8 +67,11 @@ Page({
               players: room.players,
               playerNames: room.players.map(p => p.name),
               selectedPlayer: room.players[0],
-              history: room.history
+              history: room.history,
+              syncStatus: 'synced'
             });
+          } else {
+            this.setData({ syncStatus: 'idle' });
           }
         }
       },
@@ -79,8 +85,11 @@ Page({
             players: room.players,
             playerNames: room.players.map(p => p.name),
             selectedPlayer: room.players[0],
-            history: room.history
+            history: room.history,
+            syncStatus: 'synced'
           });
+        } else {
+          this.setData({ syncStatus: 'idle' });
         }
       }
     });
@@ -92,12 +101,14 @@ Page({
       watcher: db.collection('rooms').doc(roomId).watch({
         onChange: (snapshot) => {
           if (snapshot.docChanges.length > 0) {
+            this.setData({ syncStatus: 'syncing' });
             const room = snapshot.docChanges[0].doc;
             this.setData({
               room: room,
               players: room.players,
               playerNames: room.players.map(p => p.name),
-              history: room.history || []
+              history: room.history || [],
+              syncStatus: 'synced'
             });
             // 更新本地存储
             wx.setStorageSync('currentRoom', room);
@@ -122,6 +133,7 @@ Page({
         },
         onError: (err) => {
           console.error('监听房间失败', err);
+          this.setData({ syncStatus: 'idle' });
         }
       })
     });
@@ -165,14 +177,14 @@ Page({
       return {
         title: `邀请你加入${room.name}`,
         path: `/pages/index/index?roomId=${room.id}&invite=true`,
-        imageUrl: '',
+        imageUrl: 'https://img.icons8.com/color/480/000000/mahjong.png',
         desc: `房间号: ${room.id}，快来一起打麻将吧！`
       };
     }
     return {
       title: '麻将计分',
       path: '/pages/index/index',
-      imageUrl: '',
+      imageUrl: 'https://img.icons8.com/color/480/000000/mahjong.png',
       desc: '快来一起打麻将计分吧！'
     };
   },
@@ -182,14 +194,14 @@ Page({
       return {
         title: `邀请你加入${room.name}`,
         path: `/pages/index/index?roomId=${room.id}&invite=true`,
-        imageUrl: '',
+        imageUrl: 'https://img.icons8.com/color/480/000000/mahjong.png',
         query: `roomId=${room.id}&invite=true`
       };
     }
     return {
       title: '麻将计分',
       path: '/pages/index/index',
-      imageUrl: '',
+      imageUrl: 'https://img.icons8.com/color/480/000000/mahjong.png',
       query: ''
     };
   },
@@ -313,8 +325,11 @@ Page({
     // 检查总分是否保持平衡
     const finalTotal = players.reduce((sum, p) => sum + p.score, 0);
     if (finalTotal !== initialTotal) {
-      console.error('分数不平衡：初始总分', initialTotal, '最终总分', finalTotal);
-      // 这里可以添加调整逻辑，确保总分平衡
+      wx.showToast({
+        title: '分数计算错误，请重新输入',
+        icon: 'none'
+      });
+      return;
     }
     
     // 记录历史
@@ -363,11 +378,19 @@ Page({
       room.history = history;
       wx.setStorageSync('currentRoom', room);
       // 更新云数据库
+      this.setData({ syncStatus: 'syncing' });
       const db = wx.cloud.database();
       db.collection('rooms').doc(this.data.roomId).update({
         data: {
           players: players,
           history: history
+        },
+        success: () => {
+          this.setData({ syncStatus: 'synced' });
+        },
+        fail: (err) => {
+          console.error('更新房间失败', err);
+          this.setData({ syncStatus: 'idle' });
         }
       });
     }
@@ -384,8 +407,9 @@ Page({
     
     // 多人模式下检查是否为房主
     if (room && room.creator) {
-      // 获取当前用户信息
-      wx.getUserInfo({
+      // 获取当前用户信息（使用 wx.getUserProfile 替代 wx.getUserInfo）
+      wx.getUserProfile({
+        desc: '用于验证房主身份',
         success: (res) => {
           const currentUser = res.userInfo.nickName;
           // 检查当前用户是否是房主

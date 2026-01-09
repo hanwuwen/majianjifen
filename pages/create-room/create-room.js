@@ -25,11 +25,14 @@ Page({
     const { roomName, playerCountIndex, initialScore } = this.data;
     const playerCount = parseInt(playerCountIndex) + 2;
     
-    // 生成房间ID
-    const roomId = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    // 生成房间ID（时间戳+随机数，确保唯一性）
+    const timestamp = Date.now().toString().slice(-6);
+    const randomPart = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const roomId = `${timestamp}${randomPart}`;
     
-    // 获取微信用户信息
-    wx.getUserInfo({
+    // 获取微信用户信息（使用 wx.getUserProfile 替代 wx.getUserInfo）
+    wx.getUserProfile({
+      desc: '用于记录房间创建者信息',
       success: (res) => {
         const userInfo = res.userInfo;
         
