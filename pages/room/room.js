@@ -232,14 +232,12 @@ Page({
       return {
         title: `邀请你加入${room.name}`,
         path: `/pages/index/index?roomId=${room.id}&invite=true`,
-        imageUrl: 'https://img.icons8.com/color/480/000000/mahjong.png',
         desc: `房间号: ${room.id}，快来一起打麻将吧！`
       };
     }
     return {
       title: '麻将计分',
       path: '/pages/index/index',
-      imageUrl: 'https://img.icons8.com/color/480/000000/mahjong.png',
       desc: '快来一起打麻将计分吧！'
     };
   },
@@ -249,14 +247,12 @@ Page({
       return {
         title: `邀请你加入${room.name}`,
         path: `/pages/index/index?roomId=${room.id}&invite=true`,
-        imageUrl: 'https://img.icons8.com/color/480/000000/mahjong.png',
         query: `roomId=${room.id}&invite=true`
       };
     }
     return {
       title: '麻将计分',
       path: '/pages/index/index',
-      imageUrl: 'https://img.icons8.com/color/480/000000/mahjong.png',
       query: ''
     };
   },
