@@ -5,7 +5,7 @@ Page({
     roomId: '',
     playerCountOptions: ['2人', '3人', '4人'],
     playerCountIndex: 2, // 默认4人
-    initialScore: 1000
+    initialScore: 0
   },
   onLoad() {
     // 生成房间ID和默认房间名称：房间号+记分局
@@ -58,11 +58,17 @@ Page({
     
     // 初始化玩家
     for (let i = 1; i <= playerCount; i++) {
-      room.players.push({
+      const player = {
         id: i,
         name: `玩家${i}`,
         score: parseInt(initialScore)
-      });
+      };
+      // 为创建者（第一个玩家）设置头像和名称
+      if (i === 1 && userInfo) {
+        player.name = userInfo.nickName;
+        player.avatar = userInfo.avatarUrl;
+      }
+      room.players.push(player);
     }
     
     // 保存到云数据库
