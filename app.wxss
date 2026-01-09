@@ -6,6 +6,29 @@ page {
   line-height: 1.5;
 }
 
+/* 底部导航栏样式 */
+.tab-bar {
+  background-color: #fff;
+  border-top: 1rpx solid #f0f0f0;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.tab-bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 16rpx 0;
+  transition: all 0.3s ease;
+}
+
+.tab-bar-item text {
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
 .container {
   padding: 20rpx;
   box-sizing: border-box;

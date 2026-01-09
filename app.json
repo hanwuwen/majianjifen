@@ -13,18 +13,19 @@
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "selectedColor": "#1AAD19",
+    "color": "#666",
+    "height": "100rpx",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "assets/icon-home.png",
-        "selectedIconPath": "assets/icon-home-active.png"
+        "text": "首页"
       },
       {
         "pagePath": "pages/history/history",
-        "text": "历史记录",
-        "iconPath": "assets/icon-history.png",
-        "selectedIconPath": "assets/icon-history-active.png"
+        "text": "历史记录"
       }
     ]
   },
